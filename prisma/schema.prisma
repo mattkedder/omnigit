@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Repository {
+  id        Int      @id @default(autoincrement())
+  fullName  String   @unique @map("full_name")
+  owner     String
+  name      String
+  isActive  Boolean  @default(true) @map("is_active")
+  source    String   @default("manual")
+  tasks     Task[]
+
+  @@map("repositories")
+}
+
+model Task {
+  id             Int        @id @default(autoincrement())
+  githubId       BigInt     @map("github_id")
+  repoId         Int        @map("repo_id")
+  repository     Repository @relation(fields: [repoId], references: [id], onDelete: Cascade)
+  title          String
+  state          String
+  type           String
+  url            String
+  number         Int
+  assigneeAvatar String?    @map("assignee_avatar")
+  assigneeLogin  String?    @map("assignee_login")
+  body           String?
+  boardStatus    String?    @map("board_status")
+  labels         String?    // JSON array stored as text
+  milestone      String?
+  createdAt      DateTime   @map("created_at")
+  updatedAt      DateTime   @map("updated_at")
+
+  @@unique([githubId, repoId])
+  @@index([state])
+  @@index([type])
+  @@index([boardStatus])
+  @@index([updatedAt])
+  @@index([repoId])
+  @@map("tasks")
+}
+
+model Setting {
+  key   String  @id
+  value String?
+
+  @@map("settings")
+}
