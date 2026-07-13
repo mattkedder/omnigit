@@ -75,7 +75,7 @@ export default function KanbanBoard({ tasks, boardStatuses }: KanbanBoardProps) 
                     <div className="flex items-start justify-between gap-2">
                       <span className="text-xs font-medium text-slate-500 truncate flex items-center gap-1.5">
                         {task.repository.fullName} #{task.number}
-                        {isStale && <AlertTriangle className="w-3.5 h-3.5 text-red-500" title="Task hasn't been updated in over 7 days" />}
+                        {isStale && <span title="Task hasn't been updated in over 7 days"><AlertTriangle className="w-3.5 h-3.5 text-red-500" /></span>}
                       </span>
                       {task.assigneeAvatar ? (
                         <img src={task.assigneeAvatar} alt="avatar" className="w-5 h-5 rounded-full border border-slate-200 flex-shrink-0" />

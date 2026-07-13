@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { LayoutDashboard, FileText, Box, TableProperties, Plus, BarChart3, Activity } from 'lucide-react';
 import SyncButton from '@/components/SyncButton';
 import SettingsModal from '@/components/SettingsModal';
+import BrandMenu from '@/components/BrandMenu';
 import FilterBar from '@/components/FilterBar';
 import TaskTable from '@/components/TaskTable';
 import KanbanBoard from '@/components/KanbanBoard';
@@ -91,7 +92,7 @@ export default async function Home({
 
   // Fetch user and all repositories for the Settings Modal if token exists
   let githubUser = null;
-  let allRepositories = [];
+  let allRepositories: any[] = [];
   if (hasToken) {
     const { getGitHubUser, getRepositories } = await import('@/actions/settings');
     [githubUser, allRepositories] = await Promise.all([
@@ -139,25 +140,22 @@ export default async function Home({
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans antialiased selection:bg-purple-100">
       <header className="sticky top-0 z-30 bg-white border-b border-slate-200">
-        <div className="px-6 h-12 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-md flex items-center justify-center overflow-hidden">
-                <img src="/icons/icon-96x96.png" alt="OmniGit Logo" className="w-full h-full object-cover" />
-              </div>
-              <h1 className="text-[17px] font-bold text-slate-900 tracking-tight">OmniGit</h1>
+        <div className="px-4 sm:px-6 h-12 flex items-center justify-between">
+          <div className="flex items-center gap-4 sm:gap-6">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <BrandMenu />
 
-              <div className="ml-4 px-2.5 py-1 bg-slate-50 rounded-md flex items-center gap-3 text-xs font-medium text-slate-600 border border-slate-200">
+              <div className="hidden xl:flex ml-4 px-2.5 py-1 bg-slate-50 rounded-md items-center gap-3 text-xs font-medium text-slate-600 border border-slate-200">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                   <span>{repos.length} Active Repos</span>
                 </div>
                 <div className="w-px h-3 bg-slate-300"></div>
-                <span>{totalTasks} Total Tasks</span>
+                <span>{totalTasks} Open Tasks</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-1 h-14 text-sm font-medium">
+            <div className="flex items-center gap-1 h-14 text-sm font-medium shrink-0">
               <Link
                 href={`/?${new URLSearchParams({ ...cleanSearchParams, view: 'list' }).toString()}`}
                 className={`flex items-center gap-2 px-3 h-8 rounded-md transition-colors ${view === 'list' ? 'text-purple-700 bg-purple-50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}
@@ -179,8 +177,8 @@ export default async function Home({
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="flex flex-col items-end justify-center mr-1">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0 pl-2">
+            <div className="hidden xl:flex flex-col items-end justify-center mr-1">
               <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider leading-tight">Last Sync</span>
               <span className="text-xs font-medium text-slate-600 leading-tight">{lastSyncFormatted}</span>
             </div>

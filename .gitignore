@@ -64,4 +64,4 @@ venv/
 
 # Release
 OmniGit-Release/
-OmniGit-Release.zip
+OmniGit-v*.zip

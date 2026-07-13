@@ -73,7 +73,7 @@ export async function syncRepository(fullName: string) {
   `;
 
   while (hasNextPage) {
-    const response = await fetch('https://api.github.com/graphql', {
+    const res: any = await fetch('https://api.github.com/graphql', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token.value}`,
@@ -85,12 +85,12 @@ export async function syncRepository(fullName: string) {
       })
     });
 
-    if (!response.ok) {
-      console.error('GraphQL HTTP error:', await response.text());
+    if (!res.ok) {
+      console.error('GraphQL HTTP error:', await res.text());
       break;
     }
 
-    const json = await response.json();
+    const json = await res.json();
     if (json.errors) {
       console.error('GraphQL validation errors:', json.errors);
       break;

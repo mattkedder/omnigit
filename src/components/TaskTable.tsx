@@ -136,7 +136,7 @@ export default function TaskTable({ tasks, page, searchParams }: TaskTableProps)
                         <span className={isStale ? "text-red-500 font-semibold" : "text-slate-600"}>
                           {task.updatedAt.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                         </span>
-                        {isStale && <AlertTriangle className="w-3.5 h-3.5 text-red-500" title="Task hasn't been updated in over 7 days" />}
+                        {isStale && <span title="Task hasn't been updated in over 7 days"><AlertTriangle className="w-3.5 h-3.5 text-red-500" /></span>}
                       </div>
                     </td>
                     <td className="px-4 py-3 border-r border-slate-200">

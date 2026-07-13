@@ -19,6 +19,7 @@ export default function FilterBar({ repos, boardStatuses, labelNames, assignees,
   
   const [search, setSearch] = useState(searchParams.get('q') || '');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const handleFilterChange = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -45,7 +46,7 @@ export default function FilterBar({ repos, boardStatuses, labelNames, assignees,
   // Only count actual filters (exclude view, sort, order, page)
   const hasFilters = Array.from(searchParams.keys()).some(k => !['sort', 'order', 'page', 'view'].includes(k));
 
-  const selectClassName = "h-8 px-2.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-colors cursor-pointer appearance-none pr-8 relative bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-[right_6px_center] bg-no-repeat";
+  const selectClassName = "h-8 px-2.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-colors cursor-pointer appearance-none pr-8 relative bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-[right_6px_center] bg-no-repeat flex-1 sm:flex-none w-[calc(50%-4px)] sm:w-auto min-w-[120px]";
 
   // Custom Searchable Dropdown for Repositories
   const [repoOpen, setRepoOpen] = useState(false);
@@ -72,28 +73,42 @@ export default function FilterBar({ repos, boardStatuses, labelNames, assignees,
   const currentRepo = searchParams.get('repo') || '';
 
   return (
-    <div className="w-full flex items-center justify-between px-6 py-2.5 bg-white border-b border-slate-200 min-h-[52px]">
+    <div className="w-full flex flex-col xl:flex-row items-start xl:items-center justify-between px-4 sm:px-6 py-3 bg-white border-b border-slate-200 gap-3">
       
       {/* Left Side: Filter Label and Dropdowns */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-1.5 text-slate-500 font-medium text-sm mr-2">
-          <Filter className="w-4 h-4" /> Filter
-        </div>
-
-        <form onSubmit={handleSearchSubmit} className="relative group">
-          <input 
-            type="text" 
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search..."
-            className="h-8 px-3 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-colors w-40 focus:w-56"
-          />
-        </form>
+      <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-2 w-full">
         
-        <div className="relative" ref={repoRef}>
+        {/* Search and Mobile Toggle Row */}
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="hidden sm:flex items-center gap-1.5 text-slate-500 font-medium text-sm mr-1 shrink-0">
+            <Filter className="w-4 h-4" /> <span className="hidden md:inline">Filter</span>
+          </div>
+
+          <form onSubmit={handleSearchSubmit} className="relative group flex-1 sm:w-auto sm:flex-none">
+            <input 
+              type="text" 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search tasks..."
+              className="h-8 px-3 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-colors w-full sm:w-40 sm:focus:w-56"
+            />
+          </form>
+
+          <button 
+            type="button" 
+            onClick={() => setShowMobileFilters(!showMobileFilters)}
+            className={`sm:hidden h-8 px-3 text-xs font-medium border rounded-md transition-colors flex items-center justify-center gap-1.5 shrink-0 ${showMobileFilters ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+          >
+            <Filter className="w-3.5 h-3.5" /> Filters
+          </button>
+        </div>
+        
+        {/* Advanced Filters (Collapsible on Mobile) */}
+        <div className={`${showMobileFilters ? 'flex' : 'hidden'} sm:flex flex-wrap items-center gap-2 w-full sm:w-auto mt-1 sm:mt-0`}>
+          <div className="relative flex-1 sm:flex-none w-[calc(50%-4px)] sm:w-auto min-w-[120px]" ref={repoRef}>
           <div 
             onClick={() => setRepoOpen(!repoOpen)}
-            className="h-8 px-2.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50 transition-colors cursor-pointer flex items-center justify-between gap-2 min-w-[140px] max-w-[200px]"
+            className="h-8 px-2.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50 transition-colors cursor-pointer flex items-center justify-between gap-2 w-full sm:max-w-[200px]"
           >
             <span className="truncate">{currentRepo || 'Repository'}</span>
             <ChevronDown className="w-4 h-4 text-slate-400 flex-shrink-0" />
@@ -160,10 +175,10 @@ export default function FilterBar({ repos, boardStatuses, labelNames, assignees,
         </select>
 
         {/* Custom Assignee Dropdown */}
-        <div className="relative" ref={assigneeRef}>
+        <div className="relative flex-1 sm:flex-none w-[calc(50%-4px)] sm:w-auto min-w-[120px]" ref={assigneeRef}>
           <div 
             onClick={() => setAssigneeOpen(!assigneeOpen)}
-            className="h-8 px-2.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50 transition-colors cursor-pointer flex items-center justify-between gap-2 min-w-[140px] max-w-[200px]"
+            className="h-8 px-2.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50 transition-colors cursor-pointer flex items-center justify-between gap-2 w-full sm:max-w-[200px]"
           >
             <span className="truncate">{searchParams.get('assignee') || 'Assignee'}</span>
             <ChevronDown className="w-4 h-4 text-slate-400 flex-shrink-0" />
@@ -251,21 +266,23 @@ export default function FilterBar({ repos, boardStatuses, labelNames, assignees,
           <option value="boardStatus-asc">Status</option>
         </select>
 
-        {hasFilters && (
-          <button type="button" onClick={clearFilters} className="text-slate-400 hover:text-slate-700 p-1.5 rounded-md hover:bg-slate-50 transition-colors ml-1" title="Clear Filters">
-            <X className="w-4 h-4" />
-          </button>
-        )}
+          {hasFilters && (
+            <button type="button" onClick={clearFilters} className="text-slate-400 hover:text-slate-700 p-1.5 rounded-md hover:bg-slate-50 transition-colors ml-1" title="Clear Filters">
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Right Side: Actions */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 xl:ml-auto">
         <button 
           type="button" 
           onClick={() => setIsCreateOpen(true)}
-          className="h-8 px-3 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-colors flex items-center gap-1.5"
+          className="fixed bottom-6 right-6 z-50 xl:static xl:bottom-auto xl:right-auto xl:z-auto h-14 w-14 xl:h-8 xl:w-auto xl:px-3 text-white xl:text-slate-600 bg-purple-600 xl:bg-white border-none xl:border xl:border-slate-200 rounded-full xl:rounded-md hover:bg-purple-700 xl:hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-purple-500/30 xl:focus:ring-2 xl:focus:ring-purple-500/50 transition-all flex items-center justify-center gap-1.5 shadow-xl shadow-purple-500/20 xl:shadow-none"
         >
-          <Plus className="w-3.5 h-3.5 text-slate-400" /> New Task
+          <Plus className="w-6 h-6 xl:w-3.5 xl:h-3.5 xl:text-slate-400" />
+          <span className="hidden xl:inline text-xs font-medium">New Task</span>
         </button>
       </div>
 

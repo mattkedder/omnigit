@@ -65,7 +65,7 @@ export async function createTask(repoFullName: string, title: string, body: stri
   return { success: true };
 }
 
-export async function updateBoardStatus(taskId: string, boardStatus: string) {
+export async function updateBoardStatus(taskId: number, boardStatus: string) {
   await prisma.task.update({
     where: { id: taskId },
     data: { boardStatus },
