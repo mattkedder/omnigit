@@ -1,5 +1,7 @@
 # OmniGit
 
+![OmniGit Preview](public/screenshoot/preview.png)
+
 OmniGit is a unified, locally-hosted, lightning-fast Kanban dashboard and task management interface designed to seamlessly aggregate issues and pull requests across multiple GitHub repositories. Built with a focus on speed, privacy, and a pristine flat-UI aesthetic.
 
 ## 🚀 Features

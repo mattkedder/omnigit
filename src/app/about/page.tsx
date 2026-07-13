@@ -37,13 +37,13 @@ export default function AboutPage() {
           
           {/* App Explanation */}
           <section>
-            <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-4">The Ultimate GitHub Task Manager</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-4">Your New Favorite GitHub Task Manager</h2>
             <p className="text-slate-600 leading-relaxed">
-              OmniGit is a fast, local-first desktop application designed to streamline how you manage GitHub issues and pull requests across multiple repositories. 
-              By syncing your GitHub data into a fast local SQLite database, OmniGit allows you to filter, sort, and organize tasks instantly without waiting for network requests.
+              OmniGit is a super fast, local-first desktop app built to make managing GitHub issues and pull requests a breeze. 
+              If you're a product manager, project manager, or supervisor juggling multiple repositories, you know how slow and clunky navigating through standard web interfaces can get.
             </p>
             <p className="text-slate-600 leading-relaxed mt-4">
-              Whether you prefer a traditional list view, a Kanban board, or high-level insights, OmniGit adapts to your workflow, keeping your focus completely on shipping great software.
+              We sync all your GitHub data straight into a snappy local database on your machine. This means you can filter, sort, and organize tasks instantly without staring at loading spinners. Whether you love a good old-fashioned list view, a Kanban board, or just need to check high-level insights, OmniGit's got you covered so you can get back to actually shipping great software.
             </p>
           </section>
 
@@ -78,8 +78,8 @@ export default function AboutPage() {
                 <img src="/author.jpg" alt="Author" className="w-full h-full object-cover" />
               </div>
               <div>
-                <h4 className="text-lg font-bold text-slate-900">Matt Kedder</h4>
-                <p className="text-slate-500 text-sm mt-1">Creator of OmniGit</p>
+                <h4 className="text-base font-semibold text-slate-900">Matt Kedder</h4>
+                <p className="text-slate-500 text-sm mt-0.5">Creator of OmniGit</p>
                 <a 
                   href="https://github.com/mattkedder" 
                   target="_blank" 
