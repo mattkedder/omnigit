@@ -53,6 +53,41 @@ exit 0
 EOF
 chmod +x OmniGit-Release/start.command
 
+echo "Creating Windows Launch Script..."
+cat << 'EOF' > OmniGit-Release/win_start_app.bat
+@echo off
+cd /d "%~dp0"
+
+set PORT=7492
+
+:: Check if server is already running
+netstat -an 2>nul | findstr ":7492 " | findstr "LISTENING" >nul 2>&1
+if not errorlevel 1 (
+    echo OmniGit Server is already running!
+    goto OPEN_BROWSER
+)
+
+echo Starting OmniGit Backend Server...
+start /B cmd /C "set PORT=%PORT% && node server.js > server.log 2>&1"
+
+echo Waiting for server to start (about 10 seconds)...
+timeout /t 10 /nobreak >nul
+
+:OPEN_BROWSER
+echo Opening OmniGit...
+
+set CHROME=
+if exist "%ProgramFiles%\Google\Chrome\Application\chrome.exe" set CHROME="%ProgramFiles%\Google\Chrome\Application\chrome.exe"
+if exist "%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe" set CHROME="%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe"
+if exist "%LocalAppData%\Google\Chrome\Application\chrome.exe" set CHROME="%LocalAppData%\Google\Chrome\Application\chrome.exe"
+
+if defined CHROME (
+    start "" %CHROME% --app=http://localhost:%PORT%
+) else (
+    start "" http://localhost:%PORT%
+)
+EOF
+
 echo "Zipping Release..."
 VERSION=$(node -p "require('./package.json').version")
 ZIP_NAME="OmniGit-v${VERSION}.zip"

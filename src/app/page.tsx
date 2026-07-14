@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { LayoutDashboard, FileText, Box, TableProperties, Plus, BarChart3, Activity } from 'lucide-react';
+import { LayoutDashboard, Box, TableProperties, BarChart3, Activity, Users } from 'lucide-react';
 import SyncButton from '@/components/SyncButton';
 import SettingsModal from '@/components/SettingsModal';
 import BrandMenu from '@/components/BrandMenu';
@@ -8,6 +8,7 @@ import TaskTable from '@/components/TaskTable';
 import KanbanBoard from '@/components/KanbanBoard';
 import Pagination from '@/components/Pagination';
 import InsightsDashboard from '@/components/InsightsDashboard';
+import LeaderboardDashboard from '@/components/LeaderboardDashboard';
 import { Prisma } from '@prisma/client';
 import Link from 'next/link';
 
@@ -145,14 +146,14 @@ export default async function Home({
             <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <BrandMenu />
 
-              <div className="hidden xl:flex ml-4 px-2.5 py-1 bg-slate-50 rounded-md items-center gap-3 text-xs font-medium text-slate-600 border border-slate-200">
+              {/* <div className="hidden xl:flex ml-4 px-2.5 py-1 bg-slate-50 rounded-md items-center gap-3 text-xs font-medium text-slate-600 border border-slate-200">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                   <span>{repos.length} Active Repos</span>
                 </div>
                 <div className="w-px h-3 bg-slate-300"></div>
                 <span>{totalTasks} Open Tasks</span>
-              </div>
+              </div> */}
             </div>
 
             <div className="flex items-center gap-1 h-14 text-sm font-medium shrink-0">
@@ -173,6 +174,12 @@ export default async function Home({
                 className={`flex items-center gap-2 px-3 h-8 rounded-md transition-colors ${view === 'insights' ? 'text-purple-700 bg-purple-50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}
               >
                 <Activity className="w-4 h-4" /> Insights
+              </Link>
+              <Link
+                href={`/?${new URLSearchParams({ ...cleanSearchParams, view: 'leaderboard' }).toString()}`}
+                className={`flex items-center gap-2 px-3 h-8 rounded-md transition-colors ${view === 'leaderboard' ? 'text-purple-700 bg-purple-50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}
+              >
+                <Users className="w-4 h-4" /> Leaderboard
               </Link>
             </div>
           </div>
@@ -197,7 +204,9 @@ export default async function Home({
           milestones={milestones}
         />
 
-        {view === 'insights' ? (
+        {view === 'leaderboard' ? (
+          <LeaderboardDashboard tasks={tasks} />
+        ) : view === 'insights' ? (
           <InsightsDashboard tasks={tasks} />
         ) : view === 'board' ? (
           cleanSearchParams.repo ? (

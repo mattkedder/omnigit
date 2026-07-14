@@ -11,7 +11,7 @@
     "lint": "eslint",
     "release": "./package_release.sh",
     "desktop": "./start_app.command",
-    "desktop:win": "start_app.bat",
+    "desktop:win": "win_start_app.bat",
     "db:push": "prisma db push",
     "db:studio": "prisma studio"
   },

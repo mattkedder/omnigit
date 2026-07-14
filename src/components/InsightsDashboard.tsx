@@ -3,7 +3,7 @@
 import { Prisma } from '@prisma/client';
 import { useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { BarChart3, PieChart, Users, FolderKanban, Clock, CircleDot, Activity, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { BarChart3, PieChart, FolderKanban, Activity, TrendingUp, TrendingDown, Minus, Users } from 'lucide-react';
 
 type TaskWithRepo = Prisma.TaskGetPayload<{
   include: { repository: true }
@@ -247,85 +247,6 @@ export default function InsightsDashboard({ tasks }: InsightsProps) {
                         style={{ width: `${percentage}%` }}
                       ></div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Assignee Leaderboard */}
-          <div className="bg-white p-5 rounded-lg border border-slate-200 lg:col-span-2">
-            <div className="flex items-center gap-2 mb-6">
-              <Users className="w-5 h-5 text-slate-500" />
-              <h3 className="font-bold text-slate-800">Assignee Leaderboard</h3>
-            </div>
-            
-            <div className="flex flex-col gap-4">
-              {stats.assignees.map((item, index) => {
-                const avgDays = Math.round(item.totalDaysOpen / item.count);
-                return (
-                  <div key={item.name} className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-lg border border-slate-100 bg-slate-50/50 hover:bg-slate-50 transition-colors">
-                    
-                    <div className="flex items-center gap-4 min-w-[200px]">
-                      <div className="text-lg font-bold text-slate-300 w-6 text-center">{index + 1}</div>
-                      {item.avatar ? (
-                        <img src={item.avatar} alt={item.name} className="w-12 h-12 rounded-full border border-slate-200" />
-                      ) : (
-                        <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-xl border border-slate-200">
-                          {item.name.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                      <div>
-                        <p className="text-sm font-bold text-slate-800">{item.name}</p>
-                        <div className="flex items-center gap-1.5 mt-0.5 text-xs text-slate-500">
-                          <CircleDot className="w-3.5 h-3.5" />
-                          <span className="font-medium text-slate-700">{item.count}</span> Tasks
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="hidden sm:block w-px h-10 bg-slate-200 mx-2"></div>
-                    
-                    <div className="flex-1">
-                      <div className="flex flex-wrap gap-2">
-                        {Object.entries(item.statusCounts)
-                          .sort(([, countA], [, countB]) => countB - countA)
-                          .map(([status, count]) => {
-                            const pillColor = getStatusColor(status, true);
-                            const textColor = getStatusTextColor(status);
-                            
-                            const handlePillClick = () => {
-                              const params = new URLSearchParams(searchParams.toString());
-                              params.set('view', 'list');
-                              params.set('assignee', item.name);
-                              params.set('status', status);
-                              router.push(`/?${params.toString()}`);
-                            };
-
-                            return (
-                              <div 
-                                key={status} 
-                                onClick={handlePillClick}
-                                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md border ${pillColor} cursor-pointer hover:opacity-80 transition-opacity`}
-                              >
-                                <span className={`text-[10px] font-bold uppercase tracking-wider ${textColor}`}>{status}</span>
-                                <span className="text-xs font-semibold text-slate-700">{count}</span>
-                              </div>
-                            );
-                          })}
-                      </div>
-                    </div>
-                    
-                    <div className="hidden sm:block w-px h-10 bg-slate-200 mx-2"></div>
-                    
-                    <div className="flex flex-col sm:items-end min-w-[120px]">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Avg Duration</span>
-                      <div className="flex items-center gap-1.5 text-sm text-slate-700 font-medium">
-                        <Clock className="w-4 h-4 text-slate-400" />
-                        {avgDays} {avgDays === 1 ? 'Day' : 'Days'}
-                      </div>
-                    </div>
-                    
                   </div>
                 );
               })}
