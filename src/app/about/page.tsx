@@ -71,25 +71,17 @@ export default function AboutPage() {
           </section>
 
           {/* Author Section */}
-          <section className="pt-4 border-t border-slate-100">
-            <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-6">Meet the Author</h3>
-            <div className="flex items-center gap-5">
-              <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-slate-100 shadow-sm shrink-0">
-                <img src="/author.jpg" alt="Author" className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <h4 className="text-base font-semibold text-slate-900">Matt Kedder</h4>
-                <p className="text-slate-500 text-sm mt-0.5">Creator of OmniGit</p>
-                <a 
-                  href="https://github.com/mattkedder" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-block mt-2 text-purple-600 hover:text-purple-700 text-sm font-medium transition-colors"
-                >
-                  @mattkedder
-                </a>
-              </div>
-            </div>
+          <section className="pt-4 border-t border-slate-100 flex justify-center">
+            <a
+              href="https://github.com/mattkedder"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-700 text-sm font-medium"
+            >
+              <span className="text-slate-400 text-xs">Made with ❤️ by</span>
+              <img src="https://github.com/mattkedder.png" alt="mattkedder" className="w-5 h-5 rounded-full border border-slate-200 flex-shrink-0" />
+              <span>@mattkedder</span>
+            </a>
           </section>
 
         </div>

@@ -141,7 +141,10 @@ export default function TaskTable({ tasks, page, searchParams }: TaskTableProps)
                     </td>
                     <td className="px-4 py-3 border-r border-slate-200">
                       {task.assigneeAvatar ? (
-                        <img src={task.assigneeAvatar} alt="avatar" className="w-5 h-5 rounded-full border border-slate-200" title={task.assigneeLogin || 'Assignee'} />
+                        <div className="flex items-center gap-1.5">
+                          <img src={task.assigneeAvatar} alt="avatar" className="w-5 h-5 rounded-full border border-slate-200 flex-shrink-0" />
+                          <span className="text-slate-600 text-xs truncate">{task.assigneeLogin || 'Assignee'}</span>
+                        </div>
                       ) : (
                         <span className="text-slate-400">&mdash;</span>
                       )}
