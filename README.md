@@ -84,10 +84,6 @@ This will create a `OmniGit-Release.zip` file containing a highly-optimized, pro
 3. Open OmniGit and enter your token into the onboarding prompt.
 4. Click **Fetch Repos** in the Settings drawer, toggle the repositories you want to track, and click **Sync**.
 
-## 🗑 Legacy Flask Version
-
-This repository was originally built using Python and Flask. For historical reference, the entire legacy Python codebase, including its virtual environment and original `.git` history, has been archived in the `legacy_flask/` directory. The root directory is now exclusively dedicated to the modern Next.js application.
-
 ## 📄 License
 
 This project is open-source and available for personal or enterprise use.
