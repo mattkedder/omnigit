@@ -1,15 +1,21 @@
 'use server'
 
 import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export async function syncRepository(fullName: string) {
-  const token = await prisma.setting.findUnique({ where: { key: 'github_token' } });
-  
-  if (!token?.value) {
-    throw new Error('GitHub token not found');
+  const session = await getServerSession(authOptions) as any;
+  if (!session?.user?.id || !session?.accessToken) {
+    throw new Error('Not authenticated');
   }
 
-  const repo = await prisma.repository.findUnique({ where: { fullName } });
+  const userId = session.user.id;
+  const token = session.accessToken;
+
+  const repo = await prisma.repository.findUnique({ 
+    where: { userId_fullName: { userId, fullName } } 
+  });
   if (!repo) return { success: false, count: 0 };
 
   const [owner, name] = fullName.split('/');
@@ -76,7 +82,7 @@ export async function syncRepository(fullName: string) {
     const res: any = await fetch('https://api.github.com/graphql', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -170,7 +176,11 @@ export async function syncRepository(fullName: string) {
 
 export async function syncAllRepositories() {
   const { revalidatePath } = await import('next/cache');
-  const repos = await prisma.repository.findMany({ where: { isActive: true } });
+  const session = await getServerSession(authOptions) as any;
+  if (!session?.user?.id) throw new Error('Not authenticated');
+
+  const userId = session.user.id;
+  const repos = await prisma.repository.findMany({ where: { userId, isActive: true } });
   
   let totalCount = 0;
   for (const repo of repos) {
@@ -181,13 +191,6 @@ export async function syncAllRepositories() {
       console.error(`Failed to sync ${repo.fullName}:`, e);
     }
   }
-
-  // Save last sync time
-  await prisma.setting.upsert({
-    where: { key: 'last_sync' },
-    update: { value: new Date().toISOString() },
-    create: { key: 'last_sync', value: new Date().toISOString() },
-  });
 
   revalidatePath('/');
   return { success: true, count: totalCount };

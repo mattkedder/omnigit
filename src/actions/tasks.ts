@@ -2,23 +2,35 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export async function createTask(repoFullName: string, title: string, body: string) {
-  // 1. Get Token
-  const token = await prisma.setting.findUnique({ where: { key: 'github_token' } });
-  if (!token?.value) {
-    throw new Error('GitHub token not found');
+  const session = await getServerSession(authOptions) as any;
+  const token = session?.accessToken;
+  const userId = session?.user?.id;
+
+  if (!token || !userId) {
+    throw new Error('Not authenticated');
   }
 
   // 2. Fetch Repo ID from local DB
-  const repo = await prisma.repository.findUnique({ where: { fullName: repoFullName } });
+  const repo = await prisma.repository.findUnique({ 
+    where: { 
+      userId_fullName: {
+        userId,
+        fullName: repoFullName
+      }
+    } 
+  });
+  
   if (!repo) {
     throw new Error('Repository not found in local database');
   }
 
   // 3. Create Issue on GitHub
   const headers = {
-    Authorization: `Bearer ${token.value}`,
+    Authorization: `Bearer ${token}`,
     Accept: 'application/vnd.github.v3+json',
     'Content-Type': 'application/json',
   };
@@ -66,6 +78,22 @@ export async function createTask(repoFullName: string, title: string, body: stri
 }
 
 export async function updateBoardStatus(taskId: number, boardStatus: string) {
+  const session = await getServerSession(authOptions) as any;
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    throw new Error('Not authenticated');
+  }
+
+  const task = await prisma.task.findUnique({
+    where: { id: taskId },
+    include: { repository: true }
+  });
+
+  if (!task || task.repository.userId !== userId) {
+    throw new Error('Unauthorized or task not found');
+  }
+
   await prisma.task.update({
     where: { id: taskId },
     data: { boardStatus },

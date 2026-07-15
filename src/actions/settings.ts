@@ -2,59 +2,52 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export async function getGitHubToken() {
-  const token = await prisma.setting.findUnique({ where: { key: 'github_token' } });
-  return token?.value || '';
-}
-
-export async function saveGitHubToken(token: string) {
-  await prisma.setting.upsert({
-    where: { key: 'github_token' },
-    update: { value: token },
-    create: { key: 'github_token', value: token },
-  });
-  revalidatePath('/');
-  return { success: true };
+  const session = await getServerSession(authOptions) as any;
+  return session?.accessToken || '';
 }
 
 export async function clearGitHubData() {
-  await prisma.task.deleteMany({});
-  await prisma.repository.deleteMany({});
-  await prisma.setting.delete({ where: { key: 'github_token' } }).catch(() => {});
-  await prisma.setting.delete({ where: { key: 'last_sync' } }).catch(() => {});
+  const session = await getServerSession(authOptions) as any;
+  if (!session?.user?.id) throw new Error('Not authenticated');
+  const userId = session.user.id;
+
+  await prisma.task.deleteMany({
+    where: { repository: { userId } }
+  });
+  await prisma.repository.deleteMany({
+    where: { userId }
+  });
+  
   revalidatePath('/');
   return { success: true };
 }
 
 export async function getGitHubUser() {
-  const token = await getGitHubToken();
-  if (!token) return null;
-  
-  try {
-    const res = await fetch('https://api.github.com/user', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.github.v3+json',
-      },
-    });
-    if (!res.ok) return null;
-    return await res.json();
-  } catch (e) {
-    console.error('Error fetching github user', e);
-    return null;
-  }
+  const session = await getServerSession(authOptions) as any;
+  if (!session?.user) return null;
+  return session.user; // NextAuth session already has name, email, image
 }
 
 export async function getRepositories() {
+  const session = await getServerSession(authOptions) as any;
+  if (!session?.user?.id) return [];
+  
   return await prisma.repository.findMany({
+    where: { userId: session.user.id },
     orderBy: { fullName: 'asc' }
   });
 }
 
 export async function fetchGitHubRepositories() {
   const token = await getGitHubToken();
-  if (!token) throw new Error('No GitHub token');
+  const session = await getServerSession(authOptions) as any;
+  if (!token || !session?.user?.id) throw new Error('No GitHub token or not authenticated');
+  
+  const userId = session.user.id;
 
   let repos: any[] = [];
   let page = 1;
@@ -84,13 +77,14 @@ export async function fetchGitHubRepositories() {
   
   for (const repo of repos) {
     await prisma.repository.upsert({
-      where: { fullName: repo.full_name },
+      where: { userId_fullName: { userId, fullName: repo.full_name } },
       update: {},
       create: {
+        userId,
         fullName: repo.full_name,
         owner: repo.owner.login,
         name: repo.name,
-        isActive: false, // Default to false, let user activate
+        isActive: false,
         source: 'github'
       }
     });
@@ -101,8 +95,11 @@ export async function fetchGitHubRepositories() {
 }
 
 export async function toggleRepository(fullName: string, isActive: boolean) {
+  const session = await getServerSession(authOptions) as any;
+  if (!session?.user?.id) throw new Error('Not authenticated');
+  
   await prisma.repository.update({
-    where: { fullName },
+    where: { userId_fullName: { userId: session.user.id, fullName } },
     data: { isActive },
   });
   revalidatePath('/');
@@ -110,7 +107,11 @@ export async function toggleRepository(fullName: string, isActive: boolean) {
 }
 
 export async function toggleAllRepositories(isActive: boolean) {
+  const session = await getServerSession(authOptions) as any;
+  if (!session?.user?.id) throw new Error('Not authenticated');
+  
   await prisma.repository.updateMany({
+    where: { userId: session.user.id },
     data: { isActive },
   });
   revalidatePath('/');

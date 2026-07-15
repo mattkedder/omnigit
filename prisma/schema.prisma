@@ -10,15 +10,70 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  repositories  Repository[]
+
+  @@map("users")
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String  @map("user_id")
+  type               String
+  provider           String
+  providerAccountId  String  @map("provider_account_id")
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
 model Repository {
   id        Int      @id @default(autoincrement())
-  fullName  String   @unique @map("full_name")
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName  String   @map("full_name")
   owner     String
   name      String
   isActive  Boolean  @default(true) @map("is_active")
   source    String   @default("manual")
   tasks     Task[]
 
+  @@unique([userId, fullName])
   @@map("repositories")
 }
 
@@ -48,11 +103,4 @@ model Task {
   @@index([updatedAt])
   @@index([repoId])
   @@map("tasks")
-}
-
-model Setting {
-  key   String  @id
-  value String?
-
-  @@map("settings")
 }

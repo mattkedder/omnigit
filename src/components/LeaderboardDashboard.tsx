@@ -23,7 +23,7 @@ type AssigneeData = {
 };
 
 type TodayTask = {
-  id: string;
+  id: number;
   title: string;
   updatedAt: Date;
   url: string;

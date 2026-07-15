@@ -145,7 +145,15 @@ export default function TaskDrawer({ task, onClose }: TaskDrawerProps) {
           <div className="border-t border-gray-200 pt-3">
             {task.body ? (
               <div className="text-sm text-gray-700 leading-relaxed [&_h1]:text-base [&_h1]:font-bold [&_h1]:mt-3 [&_h1]:mb-1 [&_h2]:text-sm [&_h2]:font-bold [&_h2]:mt-3 [&_h2]:mb-1 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-2 [&_h3]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-1 [&_li]:my-0.5 [&_code]:bg-gray-100 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs [&_pre]:bg-gray-100 [&_pre]:p-3 [&_pre]:rounded [&_pre]:overflow-x-auto [&_pre]:text-xs [&_pre]:my-2 [&_blockquote]:border-l-4 [&_blockquote]:border-gray-300 [&_blockquote]:pl-3 [&_blockquote]:italic [&_blockquote]:text-gray-500 [&_blockquote]:my-2 [&_a]:text-blue-600 [&_a]:underline [&_p]:my-1 [&_hr]:my-3 [&_hr]:border-gray-200 [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-md [&_img]:border [&_img]:border-gray-200 [&_img]:my-3 [&_img]:mx-auto">
-                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeSanitize]}>{task.body}</ReactMarkdown>
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm]} 
+                  rehypePlugins={[rehypeRaw, rehypeSanitize]}
+                  components={{
+                    img: ({node, ...props}) => <img {...props} referrerPolicy="no-referrer" />
+                  }}
+                >
+                  {task.body}
+                </ReactMarkdown>
               </div>
             ) : (
               <p className="text-sm text-gray-500 italic">No description provided.</p>
