@@ -87,7 +87,7 @@ export default async function Home({
             </div>
 
             <div className="w-full flex items-center justify-center gap-1 text-xs font-medium text-slate-500 mt-8">
-              {/* Made with <span className="text-red-500 text-sm">♥</span> by
+              Made with <span className="text-red-500 text-sm">♥</span> by
               <a
                 href="https://github.com/mattkedder"
                 target="_blank"
@@ -96,7 +96,7 @@ export default async function Home({
               >
                 <img src="https://github.com/mattkedder.png" alt="mattkedder" className="w-4 h-4 rounded-full shadow-sm" />
                 @mattkedder
-              </a> */}
+              </a>
             </div>
           </div>
         </div>
