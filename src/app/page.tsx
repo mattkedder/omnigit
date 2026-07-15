@@ -41,30 +41,30 @@ export default async function Home({
         <div className="relative z-10 w-full max-w-[1400px] h-[96vh] flex items-stretch gap-8 lg:gap-12">
 
           {/* Left Panel */}
-          <div className="hidden lg:flex lg:w-2/3 flex-col relative pt-10 lg:pt-14 pr-4">
-            <div className="relative z-10 max-w-2xl mb-8 flex-shrink-0">
-              <h2 className="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight leading-tight">Master your GitHub workflow across all repositories.</h2>
-              <p className="text-lg text-slate-600 mb-4 leading-relaxed">
+          <div className="hidden lg:flex lg:w-2/3 flex-col relative pt-6 lg:pt-14 pr-4">
+            <div className="relative z-10 max-w-2xl mb-4 flex-shrink-0">
+              <h2 className="text-2xl font-extrabold text-slate-900 mb-4 tracking-tight leading-tight">Master your GitHub workflow across all repositories.</h2>
+              <p className="text-sm text-slate-600 mb-4 leading-relaxed">
                 OmniGit provides a unified workspace to track issues, visualize progress on Kanban boards, and monitor team insights without ever switching tabs.
               </p>
               <div className="flex flex-wrap gap-4 text-sm font-medium text-slate-700 mt-6">
-                <div className="flex items-center gap-2 bg-white/60 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-white/60">
+                <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-white/60">
                   <span className="text-lg">🚀</span> Multi-Repo Sync
                 </div>
-                <div className="flex items-center gap-2 bg-white/60 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-white/60">
+                <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-white/60">
                   <span className="text-lg">📊</span> Team Insights
                 </div>
-                <div className="flex items-center gap-2 bg-white/60 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-white/60">
+                <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-white/60">
                   <span className="text-lg">⚡</span> Kanban Boards
                 </div>
               </div>
             </div>
 
-            <div className="relative z-10 flex-1 w-full rounded-t-3xl shadow-[0_-10px_50px_-15px_rgba(0,0,0,0.15)] border-t border-x border-white/60 overflow-hidden bg-white/60 backdrop-blur-md">
+            <div className="relative z-10 flex-1 w-full  overflow-hidden ">
               <img
-                src="/screenshoot/preview.png"
+                src="/screenshoot/preview.webp"
                 alt="OmniGit Preview"
-                className="w-full h-full object-cover object-left-top"
+                className="w-full h-full object-cover "
               />
             </div>
           </div>
@@ -73,12 +73,12 @@ export default async function Home({
           <div className="w-full lg:w-1/3 flex flex-col items-center justify-between p-8 bg-white/20 backdrop-blur-2xl border border-white/40 rounded-[2rem] shadow-[0_8px_40px_rgb(0,0,0,0.08)] my-auto h-full max-h-[94vh]">
             <div className="w-full"></div> {/* Spacer */}
 
-            <div className="w-full max-w-sm flex flex-col items-center text-center">
-              <div className="w-20 h-20 bg-white/80 backdrop-blur-md shadow-sm border border-white/60 rounded-3xl flex items-center justify-center mb-8">
-                <img src="/icon.png" alt="OmniGit Logo" className="rounded-2xl w-14 h-14 object-cover" />
+            <div className="w-full px-12 max-w-sm flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-white/80 backdrop-blur-md shadow-sm border border-white/60 rounded-3xl flex items-center justify-center mb-8">
+                <img src="/icon.png" alt="OmniGit Logo" className="rounded-2xl w-16 h-16 object-cover" />
               </div>
-              <h1 className="text-3xl font-bold text-slate-900 mb-3 tracking-tight">Welcome to OmniGit</h1>
-              <p className="text-slate-600 mb-10 font-medium leading-relaxed">
+              <h1 className="text-xl font-bold text-slate-900 mb-3 tracking-tight">Welcome to OmniGit</h1>
+              <p className="text-slate-600 mb-10 font-medium leading-relaxed text-sm">
                 Connect your GitHub account to seamlessly manage your repositories, tasks, and agile boards.
               </p>
               <div className="w-full flex items-center justify-center">
