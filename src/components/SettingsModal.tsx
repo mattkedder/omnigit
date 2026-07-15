@@ -12,11 +12,12 @@ type Repository = {
 };
 
 type SettingsModalProps = {
+  hasToken?: boolean;
   user?: any;
   repositories?: Repository[];
 };
 
-export default function SettingsModal({ user, repositories = [] }: SettingsModalProps) {
+export default function SettingsModal({ hasToken, user, repositories = [] }: SettingsModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
