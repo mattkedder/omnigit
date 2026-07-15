@@ -16,6 +16,10 @@ export const metadata: Metadata = {
   title: "OmniGit",
   description: "A fast, local GitHub Kanban board.",
   manifest: "/manifest.json",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function RootLayout({
