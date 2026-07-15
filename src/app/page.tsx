@@ -25,65 +25,79 @@ export default async function Home({
 
   if (!session?.user?.id) {
     return (
-      <div className="h-screen overflow-hidden bg-white flex font-sans">
-        <div className="hidden lg:flex lg:w-2/3 bg-slate-50 flex-col relative overflow-hidden border-r border-slate-200 pt-10 lg:pt-14 px-10 lg:px-16">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 z-0"></div>
+      <div className="h-screen overflow-hidden bg-slate-50 flex items-center justify-center font-sans relative p-4 lg:p-6">
 
-          <div className="relative z-10 max-w-2xl mb-8 flex-shrink-0">
-            <h2 className="text-3xl font-extrabold text-slate-900 mb-4 tracking-tight leading-tight">Master your GitHub workflow across all repositories.</h2>
-            <p className="text-md text-slate-600 mb-4 leading-relaxed">
-              OmniGit provides a unified workspace to track issues, visualize progress on Kanban boards, and monitor team insights without ever switching tabs.
-            </p>
-            <div className="flex flex-wrap gap-4 text-sm font-medium text-slate-700 mt-6">
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm border border-slate-200">
-                <span className="text-lg">🚀</span> Multi-Repo Sync
-              </div>
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm border border-slate-200">
-                <span className="text-lg">📊</span> Team Insights
-              </div>
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm border border-slate-200">
-                <span className="text-lg">⚡</span> Kanban Boards
-              </div>
-            </div>
+        {/* Full-width Background Layer */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] rounded-full bg-purple-500/15 blur-[100px]" />
+            <div className="absolute top-[20%] -right-[20%] w-[60%] h-[60%] rounded-full bg-blue-500/10 blur-[100px]" />
+            <div className="absolute -bottom-[20%] left-[20%] w-[80%] h-[80%] rounded-full bg-indigo-500/10 blur-[100px]" />
           </div>
-
-          <div className="relative z-10 flex-1 w-full rounded-t-2xl shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] border-t border-x border-slate-200 overflow-hidden bg-white">
-            <img
-              src="/screenshoot/preview.png"
-              alt="OmniGit Preview"
-              className="w-full h-full object-cover object-left-top"
-            />
-          </div>
+          <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#94a3b8_2px,transparent_2px)] [background-size:32px_32px] [mask-image:radial-gradient(ellipse_100%_100%_at_50%_50%,#000_50%,transparent_100%)]"></div>
         </div>
 
-        {/* Right Panel - Login */}
-        <div className="w-full lg:w-1/3 flex flex-col items-center justify-between p-8 sm:p-12 bg-white">
-          <div className="w-full"></div> {/* Spacer */}
-          
-          <div className="w-full max-w-sm flex flex-col items-center text-center">
-            <div className="w-16 h-16 bg-white shadow-sm border border-slate-200 rounded-2xl flex items-center justify-center mb-6">
-              <img src="/icon.png" alt="OmniGit Logo" className="rounded-xl w-12 h-12 object-cover" />
+        {/* Content Container */}
+        <div className="relative z-10 w-full max-w-[1400px] h-[96vh] flex items-stretch gap-8 lg:gap-12">
+
+          {/* Left Panel */}
+          <div className="hidden lg:flex lg:w-2/3 flex-col relative pt-10 lg:pt-14 pr-4">
+            <div className="relative z-10 max-w-2xl mb-8 flex-shrink-0">
+              <h2 className="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight leading-tight">Master your GitHub workflow across all repositories.</h2>
+              <p className="text-lg text-slate-600 mb-4 leading-relaxed">
+                OmniGit provides a unified workspace to track issues, visualize progress on Kanban boards, and monitor team insights without ever switching tabs.
+              </p>
+              <div className="flex flex-wrap gap-4 text-sm font-medium text-slate-700 mt-6">
+                <div className="flex items-center gap-2 bg-white/60 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-white/60">
+                  <span className="text-lg">🚀</span> Multi-Repo Sync
+                </div>
+                <div className="flex items-center gap-2 bg-white/60 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-white/60">
+                  <span className="text-lg">📊</span> Team Insights
+                </div>
+                <div className="flex items-center gap-2 bg-white/60 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-white/60">
+                  <span className="text-lg">⚡</span> Kanban Boards
+                </div>
+              </div>
             </div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-3 tracking-tight">Welcome to OmniGit</h1>
-            <p className="text-slate-500 mb-10 font-medium leading-relaxed">
-              Connect your GitHub account to seamlessly manage your repositories, tasks, and agile boards.
-            </p>
-            <div className="w-full flex items-center justify-center">
-              <LoginButton />
+
+            <div className="relative z-10 flex-1 w-full rounded-t-3xl shadow-[0_-10px_50px_-15px_rgba(0,0,0,0.15)] border-t border-x border-white/60 overflow-hidden bg-white/60 backdrop-blur-md">
+              <img
+                src="/screenshoot/preview.png"
+                alt="OmniGit Preview"
+                className="w-full h-full object-cover object-left-top"
+              />
             </div>
           </div>
 
-          <div className="w-full flex items-center justify-center gap-1 text-xs font-medium text-slate-400 mt-8">
-            Made with <span className="text-red-500 text-sm">♥</span> by 
-            <a 
-              href="https://github.com/mattkedder" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="inline-flex items-center gap-1 text-slate-500 hover:text-slate-900 transition-colors hover:underline ml-0.5"
-            >
-              <img src="https://github.com/mattkedder.png" alt="mattkedder" className="w-3.5 h-3.5 rounded-full" />
-              @mattkedder
-            </a>
+          {/* Right Panel - Login (Floating Glassmorphism) */}
+          <div className="w-full lg:w-1/3 flex flex-col items-center justify-between p-8 bg-white/20 backdrop-blur-2xl border border-white/40 rounded-[2rem] shadow-[0_8px_40px_rgb(0,0,0,0.08)] my-auto h-full max-h-[94vh]">
+            <div className="w-full"></div> {/* Spacer */}
+
+            <div className="w-full max-w-sm flex flex-col items-center text-center">
+              <div className="w-20 h-20 bg-white/80 backdrop-blur-md shadow-sm border border-white/60 rounded-3xl flex items-center justify-center mb-8">
+                <img src="/icon.png" alt="OmniGit Logo" className="rounded-2xl w-14 h-14 object-cover" />
+              </div>
+              <h1 className="text-3xl font-bold text-slate-900 mb-3 tracking-tight">Welcome to OmniGit</h1>
+              <p className="text-slate-600 mb-10 font-medium leading-relaxed">
+                Connect your GitHub account to seamlessly manage your repositories, tasks, and agile boards.
+              </p>
+              <div className="w-full flex items-center justify-center">
+                <LoginButton />
+              </div>
+            </div>
+
+            <div className="w-full flex items-center justify-center gap-1 text-xs font-medium text-slate-500 mt-8">
+              {/* Made with <span className="text-red-500 text-sm">♥</span> by
+              <a
+                href="https://github.com/mattkedder"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-900 transition-colors hover:underline ml-0.5"
+              >
+                <img src="https://github.com/mattkedder.png" alt="mattkedder" className="w-4 h-4 rounded-full shadow-sm" />
+                @mattkedder
+              </a> */}
+            </div>
           </div>
         </div>
       </div>
