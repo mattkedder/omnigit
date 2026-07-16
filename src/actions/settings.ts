@@ -3,11 +3,30 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth/next';
+import { cookies } from 'next/headers';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export async function getGitHubToken() {
   const session = await getServerSession(authOptions) as any;
-  return session?.accessToken || '';
+  const cookieStore = await cookies();
+  const customPat = cookieStore.get('omnigit_pat')?.value;
+  return customPat || session?.accessToken || '';
+}
+
+export async function saveUserPAT(pat: string) {
+  const session = await getServerSession(authOptions) as any;
+  if (!session?.user?.id) throw new Error('Not authenticated');
+
+  const cookieStore = await cookies();
+  cookieStore.set('omnigit_pat', pat, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 60 * 60 * 24 * 30, // 30 days
+    path: '/',
+  });
+
+  revalidatePath('/');
+  return { success: true };
 }
 
 export async function clearGitHubData() {

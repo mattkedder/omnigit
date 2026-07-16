@@ -14,7 +14,9 @@ import Link from 'next/link';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { signIn } from 'next-auth/react'; // This won't work in server component directly for interaction, better to use a client component or redirect. Wait, NextAuth provides a server-side redirect or a login link.
+import { cookies } from 'next/headers';
 import LoginButton from '@/components/LoginButton';
+import TokenDialog from '@/components/TokenDialog';
 
 export default async function Home({
   searchParams,
@@ -175,9 +177,13 @@ export default async function Home({
     prisma.task.findMany({ where: whereWithoutAssignee, select: { assigneeLogin: true, assigneeAvatar: true }, distinct: ['assigneeLogin'] }),
     prisma.task.findMany({ where, select: { milestone: true }, distinct: ['milestone'] })
   ]);
-
+  
   const totalPages = view === 'list' ? Math.ceil(totalTasks / 20) : 1;
-  const hasToken = !!session?.accessToken;
+  const cookieStore = await cookies();
+  const customPat = cookieStore.get('omnigit_pat')?.value;
+  
+  const hasToken = !!session?.accessToken || !!customPat;
+  const hasStoredPAT = !!customPat || session?.accessToken?.startsWith('ghp_');
 
   // Fetch user and all repositories for the Settings Modal if token exists
   let githubUser = null;
@@ -226,6 +232,7 @@ export default async function Home({
 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans antialiased selection:bg-purple-100">
+      <TokenDialog hasStoredPAT={hasStoredPAT} />
       <header className="sticky top-0 z-30 bg-white border-b border-slate-200">
         <div className="px-4 sm:px-6 h-12 flex items-center justify-between">
           <div className="flex items-center gap-4 sm:gap-6">
