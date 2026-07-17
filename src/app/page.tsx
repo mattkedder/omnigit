@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { LayoutDashboard, Box, TableProperties, BarChart3, Activity, Users } from 'lucide-react';
 import SyncButton from '@/components/SyncButton';
 import SettingsModal from '@/components/SettingsModal';
+import CreateTaskButton from '@/components/CreateTaskButton';
 import BrandMenu from '@/components/BrandMenu';
 import FilterBar from '@/components/FilterBar';
 import TaskTable from '@/components/TaskTable';
@@ -149,6 +150,21 @@ export default async function Home({
       where.milestone = resolvedSearchParams.milestone;
     }
   }
+  if (resolvedSearchParams.date) {
+    const now = new Date();
+    let startDate;
+    if (resolvedSearchParams.date === 'today') {
+      startDate = new Date(now.setHours(0, 0, 0, 0));
+    } else if (resolvedSearchParams.date === 'last_7_days') {
+      startDate = new Date(now.setDate(now.getDate() - 7));
+    } else if (resolvedSearchParams.date === 'last_30_days') {
+      startDate = new Date(now.setDate(now.getDate() - 30));
+    }
+    
+    if (startDate) {
+      where.updatedAt = { gte: startDate };
+    }
+  }
 
   const whereWithoutAssignee = { ...where };
   delete (whereWithoutAssignee as any).assigneeLogin;
@@ -177,11 +193,11 @@ export default async function Home({
     prisma.task.findMany({ where: whereWithoutAssignee, select: { assigneeLogin: true, assigneeAvatar: true }, distinct: ['assigneeLogin'] }),
     prisma.task.findMany({ where, select: { milestone: true }, distinct: ['milestone'] })
   ]);
-  
+
   const totalPages = view === 'list' ? Math.ceil(totalTasks / 20) : 1;
   const cookieStore = await cookies();
   const customPat = cookieStore.get('omnigit_pat')?.value;
-  
+
   const hasToken = !!session?.accessToken || !!customPat;
   const hasStoredPAT = !!customPat || session?.accessToken?.startsWith('ghp_');
 
@@ -239,14 +255,14 @@ export default async function Home({
             <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <BrandMenu />
 
-              {/* <div className="hidden xl:flex ml-4 px-2.5 py-1 bg-slate-50 rounded-md items-center gap-3 text-xs font-medium text-slate-600 border border-slate-200">
+              <div className="hidden xl:flex ml-4 px-2.5 py-1 bg-slate-50 rounded-md items-center gap-3 text-xs font-medium text-slate-600 border border-slate-200">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                   <span>{repos.length} Active Repos</span>
                 </div>
                 <div className="w-px h-3 bg-slate-300"></div>
                 <span>{totalTasks} Open Tasks</span>
-              </div> */}
+              </div>
             </div>
 
             <div className="flex items-center gap-1 h-14 text-sm font-medium shrink-0">
@@ -282,6 +298,7 @@ export default async function Home({
               <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider leading-tight">Last Sync</span>
               <span className="text-xs font-medium text-slate-600 leading-tight">{lastSyncFormatted}</span>
             </div>
+            <CreateTaskButton repos={repos} />
             <SyncButton />
             <SettingsModal hasToken={hasToken} user={githubUser} repositories={allRepositories} />
           </div>

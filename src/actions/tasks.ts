@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
-export async function createTask(repoFullName: string, title: string, body: string) {
+export async function createTask(repoFullName: string, title: string, body: string, label?: string) {
   const session = await getServerSession(authOptions) as any;
   const token = session?.accessToken;
   const userId = session?.user?.id;
@@ -35,13 +35,15 @@ export async function createTask(repoFullName: string, title: string, body: stri
     'Content-Type': 'application/json',
   };
 
+  const labels = label ? [label] : [];
+
   const response = await fetch(`https://api.github.com/repos/${repoFullName}/issues`, {
     method: 'POST',
     headers,
     body: JSON.stringify({
       title,
       body,
-      labels: ['product iteration'] // as mentioned in the UI
+      labels
     }),
   });
 

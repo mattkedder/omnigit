@@ -3,7 +3,6 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Filter, X, Plus, Search, ChevronDown } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
-import CreateTaskDrawer from './CreateTaskDrawer';
 
 type FilterBarProps = {
   repos: { fullName: string }[];
@@ -18,7 +17,6 @@ export default function FilterBar({ repos, boardStatuses, labelNames, assignees,
   const searchParams = useSearchParams();
 
   const [search, setSearch] = useState(searchParams.get('q') || '');
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const handleFilterChange = (key: string, value: string) => {
@@ -154,6 +152,17 @@ export default function FilterBar({ repos, boardStatuses, labelNames, assignees,
           </div>
 
           <select
+            value={searchParams.get('date') || ''}
+            onChange={(e) => handleFilterChange('date', e.target.value)}
+            className={selectClassName}
+          >
+            <option value="">Any Date</option>
+            <option value="today">Today</option>
+            <option value="last_7_days">Last 7 days</option>
+            <option value="last_30_days">Last 30 days</option>
+          </select>
+
+          <select
             value={searchParams.get('state') || ''}
             onChange={(e) => handleFilterChange('state', e.target.value)}
             className={selectClassName}
@@ -273,24 +282,6 @@ export default function FilterBar({ repos, boardStatuses, labelNames, assignees,
           )}
         </div>
       </div>
-
-      {/* Right Side: Actions */}
-      <div className="flex items-center gap-3 xl:ml-auto">
-        <button
-          type="button"
-          onClick={() => setIsCreateOpen(true)}
-          className="fixed bottom-6 right-6 z-50 xl:static xl:bottom-auto xl:right-auto xl:z-auto h-14 w-14 xl:h-8 xl:w-auto xl:px-3 text-white xl:text-slate-600 bg-purple-600 xl:bg-white border-none xl:border xl:border-slate-200 rounded-full xl:rounded-md hover:bg-purple-700 xl:hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-purple-500/30 xl:focus:ring-2 xl:focus:ring-purple-500/50 transition-all flex items-center justify-center gap-1.5 shadow-xl shadow-purple-500/20 xl:shadow-none"
-        >
-          <Plus className="w-6 h-6 xl:w-3.5 xl:h-3.5 xl:text-slate-400" />
-          <span className="hidden xl:inline text-xs font-medium">Task</span>
-        </button>
-      </div>
-
-      <CreateTaskDrawer
-        isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
-        repos={repos}
-      />
     </div>
   );
 }
