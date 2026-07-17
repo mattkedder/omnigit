@@ -246,17 +246,7 @@ export default function FilterBar({ repos, boardStatuses, labelNames, assignees,
             ))}
           </select>
 
-          <select
-            value={searchParams.get('milestone') || ''}
-            onChange={(e) => handleFilterChange('milestone', e.target.value)}
-            className={selectClassName}
-          >
-            <option value="">Milestone</option>
-            <option value="No Milestone">No Milestone</option>
-            {milestones.map(m => (
-              <option key={m} value={m}>{m}</option>
-            ))}
-          </select>
+
 
           <select
             value={`${searchParams.get('sort') || 'updatedAt'}-${searchParams.get('order') || 'desc'}`}

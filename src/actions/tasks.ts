@@ -104,3 +104,46 @@ export async function updateBoardStatus(taskId: number, boardStatus: string) {
   revalidatePath('/');
   return { success: true };
 }
+
+export async function closeTask(taskId: number) {
+  const session = await getServerSession(authOptions) as any;
+  const token = session?.accessToken;
+  const userId = session?.user?.id;
+
+  if (!token || !userId) {
+    throw new Error('Not authenticated');
+  }
+
+  const task = await prisma.task.findUnique({
+    where: { id: taskId },
+    include: { repository: true }
+  });
+
+  if (!task || task.repository.userId !== userId) {
+    throw new Error('Unauthorized or task not found');
+  }
+
+  const response = await fetch(`https://api.github.com/repos/${task.repository.fullName}/issues/${task.number}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ state: 'closed' }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('GitHub API Error:', errorText);
+    throw new Error('Failed to close issue on GitHub');
+  }
+
+  await prisma.task.update({
+    where: { id: taskId },
+    data: { state: 'closed' },
+  });
+  
+  revalidatePath('/');
+  return { success: true };
+}

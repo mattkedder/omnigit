@@ -71,7 +71,7 @@ export default function SettingsModal({ hasToken, user, repositories = [] }: Set
         className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 rounded-md transition-all border border-slate-200 relative"
       >
         <img src="/github.svg" alt="GitHub" className="w-4 h-4 opacity-80" />
-        {user ? (user.name || user.email) : 'Settings'}
+        {user ? (user.name || user.email)?.split('@')[0] : 'Settings'}
       </button>
 
       {mounted && isOpen && createPortal(
@@ -107,7 +107,7 @@ export default function SettingsModal({ hasToken, user, repositories = [] }: Set
                       )}
                       <div>
                         <h3 className="text-sm font-semibold text-slate-900">
-                          {user?.name || user?.email || 'GitHub Account'}
+                          {user ? (user.name || user.email)?.split('@')[0] : 'GitHub Account'}
                         </h3>
                         <p className="text-xs text-slate-500 mt-0.5">
                           Authenticated via NextAuth

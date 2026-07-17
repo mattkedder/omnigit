@@ -27,7 +27,7 @@ export async function syncRepository(fullName: string) {
   const query = `
     query($owner: String!, $name: String!, $cursor: String) {
       repository(owner: $owner, name: $name) {
-        issues(first: 50, after: $cursor) {
+        issues(first: 50, after: $cursor, states: [OPEN]) {
           pageInfo {
             hasNextPage
             endCursor

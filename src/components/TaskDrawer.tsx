@@ -4,8 +4,10 @@ import { X, ExternalLink, Hash, Folder, Calendar, CalendarCheck, Milestone, Chec
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import rehypeSanitize from 'rehype-sanitize';
+
 import { Prisma } from '@prisma/client';
+import { useState } from 'react';
+import { closeTask } from '@/actions/tasks';
 
 type TaskWithRepo = Prisma.TaskGetPayload<{
   include: { repository: true }
@@ -17,6 +19,8 @@ type TaskDrawerProps = {
 };
 
 export default function TaskDrawer({ task, onClose }: TaskDrawerProps) {
+  const [isClosing, setIsClosing] = useState(false);
+
   if (!task) return null;
 
   let parsedLabels: any[] = [];
@@ -58,8 +62,24 @@ export default function TaskDrawer({ task, onClose }: TaskDrawerProps) {
             </a>
 
             {task.state === 'open' && (
-              <button className="flex text-xs items-center gap-1.5 text-gray-400 hover:text-red-600 transition font-medium">
-                <CheckCircle className="w-4 h-4" /> Close Issue
+              <button 
+                onClick={async () => {
+                  if (confirm('Are you sure you want to close this issue?')) {
+                    setIsClosing(true);
+                    try {
+                      await closeTask(task.id);
+                      onClose(); // optionally close drawer after closing
+                    } catch (e) {
+                      alert('Failed to close issue');
+                    } finally {
+                      setIsClosing(false);
+                    }
+                  }
+                }}
+                disabled={isClosing}
+                className="flex text-xs items-center gap-1.5 text-gray-400 hover:text-red-600 transition font-medium disabled:opacity-50"
+              >
+                <CheckCircle className={`w-4 h-4 ${isClosing ? 'animate-spin' : ''}`} /> {isClosing ? 'Closing...' : 'Close Issue'}
               </button>
             )}
 
@@ -144,10 +164,10 @@ export default function TaskDrawer({ task, onClose }: TaskDrawerProps) {
 
           <div className="border-t border-gray-200 pt-3">
             {task.body ? (
-              <div className="text-sm text-gray-700 leading-relaxed [&_h1]:text-base [&_h1]:font-bold [&_h1]:mt-3 [&_h1]:mb-1 [&_h2]:text-sm [&_h2]:font-bold [&_h2]:mt-3 [&_h2]:mb-1 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-2 [&_h3]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-1 [&_li]:my-0.5 [&_code]:bg-gray-100 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs [&_pre]:bg-gray-100 [&_pre]:p-3 [&_pre]:rounded [&_pre]:overflow-x-auto [&_pre]:text-xs [&_pre]:my-2 [&_blockquote]:border-l-4 [&_blockquote]:border-gray-300 [&_blockquote]:pl-3 [&_blockquote]:italic [&_blockquote]:text-gray-500 [&_blockquote]:my-2 [&_a]:text-blue-600 [&_a]:underline [&_p]:my-1 [&_hr]:my-3 [&_hr]:border-gray-200 [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-md [&_img]:border [&_img]:border-gray-200 [&_img]:my-3 [&_img]:mx-auto">
+              <div className="text-sm text-gray-700 leading-relaxed [&_h1]:text-base [&_h1]:font-bold [&_h1]:mt-3 [&_h1]:mb-1 [&_h2]:text-sm [&_h2]:font-bold [&_h2]:mt-3 [&_h2]:mb-1 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-2 [&_h3]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-1 [&_li]:my-0.5 [&_code]:bg-gray-100 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs [&_pre]:bg-gray-100 [&_pre]:p-3 [&_pre]:rounded [&_pre]:overflow-x-auto [&_pre]:text-xs [&_pre]:my-2 [&_blockquote]:border-l-4 [&_blockquote]:border-gray-300 [&_blockquote]:pl-3 [&_blockquote]:italic [&_blockquote]:text-gray-500 [&_blockquote]:my-2 [&_a]:text-blue-600 [&_a]:underline [&_p]:my-1 [&_hr]:my-3 [&_hr]:border-gray-200 [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-md [&_img]:border [&_img]:border-gray-200 [&_img]:my-3 [&_img]:mx-auto [&_table]:w-full [&_table]:my-4 [&_table]:border-collapse [&_th]:border [&_th]:border-gray-200 [&_th]:px-3 [&_th]:py-2 [&_th]:bg-gray-50 [&_th]:font-semibold [&_th]:text-left [&_td]:border [&_td]:border-gray-200 [&_td]:px-3 [&_td]:py-2">
                 <ReactMarkdown 
                   remarkPlugins={[remarkGfm]} 
-                  rehypePlugins={[rehypeRaw, rehypeSanitize]}
+                  rehypePlugins={[rehypeRaw]}
                   components={{
                     img: ({node, ...props}) => <img {...props} referrerPolicy="no-referrer" />
                   }}

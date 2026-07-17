@@ -115,14 +115,14 @@ export default async function Home({
   const skip = view === 'list' ? (page - 1) * 20 : undefined;
 
   const where: Prisma.TaskWhereInput = {
-    repository: { userId }
+    repository: { userId, isActive: true }
   };
 
   if (resolvedSearchParams.q) {
     where.title = { contains: resolvedSearchParams.q };
   }
   if (resolvedSearchParams.repo) {
-    where.repository = { userId, fullName: resolvedSearchParams.repo };
+    where.repository = { userId, isActive: true, fullName: resolvedSearchParams.repo };
   }
   if (resolvedSearchParams.type) {
     where.type = resolvedSearchParams.type;
