@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Prisma } from '@prisma/client';
 import TaskDrawer from './TaskDrawer';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Sparkles } from 'lucide-react';
 
 type TaskWithRepo = Prisma.TaskGetPayload<{
   include: { repository: true }
@@ -42,9 +42,23 @@ export default function KanbanBoard({ tasks, boardStatuses }: KanbanBoardProps) 
   };
 
   return (
-    <div className="w-full flex-1 overflow-x-auto bg-slate-50 p-6 min-h-[600px]">
-      <div className="flex gap-6 h-full items-start w-max">
-        {columns.map(status => (
+    <div className="w-full flex-1 overflow-x-auto bg-slate-50 p-6 min-h-[600px] relative">
+      {tasks.length === 0 ? (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center max-w-sm mx-auto p-8">
+            <div className="w-20 h-20 bg-purple-50 rounded-full flex items-center justify-center mb-6 shadow-sm border border-purple-100 relative">
+              <div className="absolute -inset-4 bg-purple-500/10 rounded-full blur-xl animate-pulse"></div>
+              <Sparkles className="w-10 h-10 text-purple-600 relative z-10" />
+            </div>
+            <h3 className="text-2xl font-bold text-slate-900 mb-3 tracking-tight text-center">Inbox Zero! 🎉</h3>
+            <p className="text-base text-slate-500 leading-relaxed text-center">
+              Your board is completely clear. You're all caught up!
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="flex gap-6 h-full items-start w-max">
+          {columns.map(status => (
           <div key={status} className="w-80 flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-sm text-slate-900 flex items-center gap-2">
@@ -114,8 +128,9 @@ export default function KanbanBoard({ tasks, boardStatuses }: KanbanBoardProps) 
               )}
             </div>
           </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <TaskDrawer 
         task={selectedTask}

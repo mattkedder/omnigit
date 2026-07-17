@@ -142,7 +142,7 @@ export default function SettingsModal({ hasToken, user, repositories = [] }: Set
                       <button 
                         onClick={handleSync}
                         disabled={isSyncing}
-                        className="bg-blue-600 text-white text-xs font-medium px-3 py-1.5 rounded-md hover:bg-blue-700 transition flex items-center gap-1.5 disabled:opacity-50"
+                        className="bg-purple-600 text-white text-xs font-medium px-3 py-1.5 rounded-md hover:bg-purple-700 transition flex items-center gap-1.5 disabled:opacity-50"
                       >
                         <RefreshCw className={`w-3 h-3 ${isSyncing ? 'animate-spin' : ''}`} /> {isSyncing ? 'Syncing...' : 'Fetch Repos'}
                       </button>
@@ -157,13 +157,13 @@ export default function SettingsModal({ hasToken, user, repositories = [] }: Set
                         placeholder="Search repositories..."
                         value={repoSearchTerm}
                         onChange={(e) => setRepoSearchTerm(e.target.value)}
-                        className="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors"
+                        className="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors"
                       />
                     </div>
                     <select
                       value={repoFilter}
                       onChange={(e) => setRepoFilter(e.target.value as any)}
-                      className="bg-white border border-slate-200 rounded-md text-sm px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors cursor-pointer"
+                      className="bg-white border border-slate-200 rounded-md text-sm px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors cursor-pointer"
                     >
                       <option value="all">All</option>
                       <option value="active">Active</option>
@@ -183,7 +183,7 @@ export default function SettingsModal({ hasToken, user, repositories = [] }: Set
                               checked={repo.isActive} 
                               onChange={(e) => handleToggleRepo(repo.fullName, e.target.checked)}
                             />
-                            <div className="w-9 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                            <div className="w-9 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-600"></div>
                           </label>
                         </div>
                       ))}

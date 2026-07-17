@@ -47,6 +47,17 @@ export default function AboutPage() {
             </p>
           </section>
 
+          {/* Inbox Zero Methodology */}
+          <section>
+            <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-4">The "To-Do List Zero" Methodology</h2>
+            <p className="text-slate-600 leading-relaxed">
+              OmniGit is heavily inspired by the <strong>Inbox Zero</strong> philosophy. We believe that a cluttered workspace leads to a cluttered mind. By aggregating only your open issues and active pull requests across all your repositories, OmniGit serves as the ultimate triage center. 
+            </p>
+            <p className="text-slate-600 leading-relaxed mt-4">
+              Our goal is to help you process, delegate, or close tasks as quickly as possible. The satisfying, celebratory empty states you see when your active queues are clear are designed to encourage you to conquer your backlog and maintain a true "To-Do List Zero".
+            </p>
+          </section>
+
           {/* Contributors Section */}
           <section className="bg-purple-50 rounded-xl p-6 border border-purple-100">
             <div className="flex items-center gap-3 mb-4">

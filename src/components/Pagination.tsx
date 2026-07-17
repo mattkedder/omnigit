@@ -45,7 +45,7 @@ export default function Pagination({ page, totalPages, searchParams }: Paginatio
               <Link 
                 key={p} 
                 href={getPageUrl(p)}
-                className={`px-3 py-1 text-sm border rounded-md transition-colors ${p === page ? 'bg-blue-600 border-blue-600 text-white' : 'border-slate-200 hover:bg-slate-50 text-slate-600'}`}
+                className={`px-3 py-1 text-sm border rounded-md transition-colors ${p === page ? 'bg-purple-600 border-purple-600 text-white' : 'border-slate-200 hover:bg-slate-50 text-slate-600'}`}
               >
                 {p}
               </Link>

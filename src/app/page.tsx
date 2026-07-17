@@ -119,7 +119,10 @@ export default async function Home({
   };
 
   if (resolvedSearchParams.q) {
-    where.title = { contains: resolvedSearchParams.q };
+    where.OR = [
+      { title: { contains: resolvedSearchParams.q } },
+      { body: { contains: resolvedSearchParams.q } }
+    ];
   }
   if (resolvedSearchParams.repo) {
     where.repository = { userId, isActive: true, fullName: resolvedSearchParams.repo };
@@ -129,6 +132,8 @@ export default async function Home({
   }
   if (resolvedSearchParams.state) {
     where.state = resolvedSearchParams.state;
+  } else {
+    where.state = 'open';
   }
   if (resolvedSearchParams.status) {
     where.boardStatus = resolvedSearchParams.status;

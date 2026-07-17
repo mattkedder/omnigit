@@ -41,6 +41,15 @@ export default function FilterBar({ repos, boardStatuses, labelNames, assignees,
     setSearch('');
   };
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (search !== (searchParams.get('q') || '')) {
+        handleFilterChange('q', search);
+      }
+    }, 400);
+    return () => clearTimeout(timeout);
+  }, [search, searchParams]);
+
   // Only count actual filters (exclude view, sort, order, page)
   const hasFilters = Array.from(searchParams.keys()).some(k => !['sort', 'order', 'page', 'view'].includes(k));
 

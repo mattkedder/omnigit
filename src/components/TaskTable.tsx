@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, AlertTriangle } from 'lucide-react';
+import { Check, AlertTriangle, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { Prisma } from '@prisma/client';
 import TaskDrawer from './TaskDrawer';
@@ -83,8 +83,16 @@ export default function TaskTable({ tasks, page, searchParams }: TaskTableProps)
           <tbody className="bg-white">
             {tasks.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-16 text-center text-slate-500">
-                  No tasks found.
+                <td colSpan={7} className="px-4 py-24 text-center">
+                  <div className="flex flex-col items-center justify-center max-w-sm mx-auto">
+                    <div className="w-16 h-16 bg-purple-50 rounded-full flex items-center justify-center mb-4 shadow-sm border border-purple-100">
+                      <Sparkles className="w-8 h-8 text-purple-600" />
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-2 tracking-tight">Inbox Zero! 🎉</h3>
+                    <p className="text-sm text-slate-500 leading-relaxed">
+                      You've conquered your open tasks. Take a breath, grab a coffee, or enjoy a moment of peace.
+                    </p>
+                  </div>
                 </td>
               </tr>
             ) : (
